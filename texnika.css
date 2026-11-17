@@ -1,0 +1,44 @@
+/* texnika.css — μορφοποίηση της σελίδας «Τεχνικά» (το κοινό μέρος είναι στο pages.css) */
+#tk-section{padding:2.2rem 0 4rem;background:var(--surface-2)}
+.tk-lead{font:400 clamp(1.1rem,2vw,1.3rem)/1.75 var(--serif);color:var(--text);margin:0 0 2rem}
+.tk-prose p{font-size:1.04rem;line-height:1.8;max-width:72ch;color:var(--text)}
+.tk-hero{margin:0 0 2rem;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.tk-hero img{display:block;width:100%;height:clamp(200px,34vw,400px);object-fit:cover}
+
+/* Εργαλεία φιλτραρίσματος */
+.tk-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem 1.2rem;margin:0 0 1.4rem}
+.tk-toolbar input[type=search]{flex:1 1 240px;max-width:360px;padding:.6rem .9rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);font:inherit}
+.tk-toolbar label{display:flex;align-items:center;gap:.4rem;font-size:.92rem;color:var(--muted);cursor:pointer}
+.tk-count{margin-left:auto;font-size:.88rem;color:var(--muted)}
+.tk-group{font:600 .78rem var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:2rem 0 1rem}
+
+/* Κάρτες */
+.tk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:1.1rem} /* minmax(250px,1fr)*/
+.tk-card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s,border-color .25s}
+.tk-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--accent)}
+.tk-card[hidden]{display:none}
+.tk-thumb{aspect-ratio:16/10;background:linear-gradient(135deg,var(--soft),var(--surface-2));display:grid;place-items:center;color:var(--muted);font:600 .8rem var(--sans);letter-spacing:.12em;overflow:hidden}
+.tk-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.tk-card:hover .tk-thumb img{transform:scale(1.05)}
+.tk-card-body{padding:1rem 1.1rem 1.2rem}
+.tk-kind{font:700 .68rem var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.tk-card h3{font-size:1.25rem;margin:.25rem 0 .45rem}
+.tk-meta{font-size:.86rem;color:var(--muted);line-height:1.5}
+.tk-badge{display:inline-block;margin-top:.6rem;font-size:.72rem;padding:.15rem .6rem;border-radius:999px;background:var(--accent);color:var(--accent-ink)}
+
+/* Σελίδα έργου */
+.tk-back{display:inline-block;margin:0 0 1.2rem;color:var(--accent);text-decoration:none;font-weight:600}
+.tk-back:hover{text-decoration:underline}
+.tk-detail h2{font-size:clamp(1.8rem,4vw,2.8rem);margin:.2rem 0 1rem}
+.tk-facts{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.2rem;margin:0 0 1.6rem;padding:1rem 1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:520px}
+.tk-facts dt{font-weight:600;color:var(--muted)}
+.tk-facts dd{margin:0}
+.tk-block{margin-top:2.2rem;padding-top:1.6rem;border-top:1px solid var(--line)}
+.tk-block h3{font-size:clamp(1.3rem,2.6vw,1.8rem);margin:0 0 .8rem}
+.tk-pager{display:flex;justify-content:space-between;gap:1rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--line)}
+.tk-pager a{flex:0 1 48%;padding:1rem 1.2rem;border:1px solid var(--line);border-radius:14px;background:var(--surface);text-decoration:none;transition:.25s}
+.tk-pager a:hover{border-color:var(--accent);background:var(--accent);color:var(--accent-ink)}
+.tk-pager small{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.tk-pager .next{text-align:right;margin-left:auto}
+.tk-empty{color:var(--muted);padding:2rem 0}
+@media (max-width:700px){.tk-pager{flex-direction:column}.tk-pager a{flex-basis:100%}.tk-pager .next{text-align:left;margin-left:0}}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Χάρτες | Bralos Rail Pass</title>
+  <meta name="description" content="Χάρτες του σιδηροδρομικού περάσματος Μπράλου." />
+  <meta name="theme-color" content="#f9f9f7" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pages.css">
+  <link rel="stylesheet" href="xartes.css">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+</head>
+<body>
+  <header class="navbar" id="siteHeader"></header>
+
+  <main class="page-main">
+    <section class="sectionh" id="introduction">
+      <div class="page-headh">
+        <div class="containerh">
+          <div class="eyebrowh" data-i18n="navMaps"></div>
+          <h1 id="mapsTitle"></h1>
+          <ul class="pillsh" id="mapsPills"></ul>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="maps-section">
+      <div class="containerh"><div id="maps-content"></div></div>
+    </section>
+  </main>
+
+  <footer id="siteFooter"></footer>
+
+  <!-- Τα κείμενα των κουμπιών: xartes-data.js · τα δεδομένα του χάρτη: xartes-geo.js (από το KML με το build_geo.py) -->
+  <script src="site.js"></script>
+  <script src="xartes-data.js"></script>
+  <script src="xartes-geo.js"></script>
+  <script>window.MAP_RENDERERS = {}; window.MAP_ON_SHOW = {};</script>
+  <script src="xartes-enas.js"></script>
+  <script src="xartes-mikotomi.js"></script>
+  <script>
+    /* ============================================================
+       ΧΑΡΤΕΣ: ΑΛΛΑΓΗ ΠΕΡΙΕΧΟΜΕΝΟΥ ΜΕ ΤΑ ΚΟΥΜΠΙΑ
+       Κάθε χάρτης είναι ένα αρχείο που ορίζει  MAP_RENDERERS.<κλειδί>(stage)  (τρέχει ΜΙΑ φορά, στο πρώτο άνοιγμα)
+       και προαιρετικά  MAP_ON_SHOW.<κλειδί>(stage)  (τρέχει ΚΑΘΕ φορά που εμφανίζεται).
+       Για νέο χάρτη: 1) μπες στο xartes-data.js  2) φτιάξε xartes-<όνομα>.js  3) πρόσθεσέ το με <script> παραπάνω.
+       ============================================================ */
+    SITE.init({ active: "maps", title: { el: "Χάρτες", en: "Maps" } });
+
+    const MD = typeof mapsData !== "undefined" ? mapsData : null;
+    const KEYS = MD ? Object.keys(MD) : [];
+    const content = document.getElementById("maps-content");
+    const title   = document.getElementById("mapsTitle");
+    const pills   = document.getElementById("mapsPills");
+    const SOON = { el: "Ο χάρτης θα προστεθεί σύντομα.", en: "This map will be added soon." };
+    const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const inited = {};
+    let current = null;
+
+    if (!MD) {
+      content.innerHTML = "<p>Δεν βρέθηκε το αρχείο <strong>xartes-data.js</strong>.</p>";
+    } else {
+      pills.innerHTML = KEYS.map(k => `<li><a href="#/xartes/${k}" data-map="${k}"></a></li>`).join("");
+      content.innerHTML = KEYS.map(k => `
+        <section class="xm-panel" id="mp-${k}" hidden>
+          <div class="xm-intro"><h2></h2><p></p></div>
+          <div class="xm-stage" id="stage-${k}"></div>
+        </section>`).join("");
+      addEventListener("hashchange", () => {
+        if (!/^#\/xartes\//.test(location.hash)) return;
+        show(fromHash(), true);
+        document.getElementById("introduction").scrollIntoView({ behavior: reduce() ? "auto" : "smooth" });
+      });
+      document.addEventListener("bralos-languagechange", texts);
+      show(fromHash(), false);
+    }
+
+    function fromHash() { const m = location.hash.match(/^#\/xartes\/([\w-]+)/); return m && MD[m[1]] ? m[1] : KEYS[0]; }
+
+    function texts() {
+      KEYS.forEach(k => {
+        const p = document.getElementById("mp-" + k);
+        p.querySelector("h2").textContent = SITE.pick(MD[k].title);
+        p.querySelector("p").innerHTML = SITE.pick(MD[k].desc);
+        if (inited[k] && !MAP_RENDERERS[k]) placeholder(k);
+      });
+      pills.querySelectorAll("a").forEach(a => { a.classList.toggle("on", a.dataset.map === current); a.textContent = SITE.pick(MD[a.dataset.map].title); });
+      if (current) title.textContent = SITE.pick(MD[current].title);
+    }
+
+    function placeholder(k) {
+      document.getElementById("stage-" + k).innerHTML = `<div class="xm-placeholder"><div><strong>${SITE.esc(SITE.pick(MD[k].title))}</strong>${SITE.pick(SOON)}</div></div>`;
+    }
+
+    function show(key, animate) {
+      current = key;
+      KEYS.forEach(k => { const p = document.getElementById("mp-" + k); p.hidden = k !== key; p.classList.remove("fade-in"); });
+      const panel = document.getElementById("mp-" + key), stage = document.getElementById("stage-" + key);
+      if (!inited[key]) {
+        inited[key] = true;
+        if (MAP_RENDERERS[key]) MAP_RENDERERS[key](stage, MD[key]); else placeholder(key);
+      }
+      if (MAP_ON_SHOW[key]) MAP_ON_SHOW[key](stage);
+      texts();
+      if (animate && !reduce()) { void panel.offsetWidth; panel.classList.add("fade-in"); }
+    }
+  </script>
+</body>
+</html>

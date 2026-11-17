@@ -1,0 +1,102 @@
+/* ==========================================================================
+   xartes.css — όλη η μορφοποίηση της σελίδας «Χάρτες» (σελίδα + Ενιαίος Χάρτης + Μηκοτομή)
+   ========================================================================== */
+
+/* ---- Σελίδα ---- */
+#maps-section{padding:2.2rem 0 4rem}
+.xm-panel[hidden]{display:none}
+.xm-intro{max-width:70ch;margin-bottom:1.6rem}
+.xm-intro h2{font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 .6rem}
+.xm-intro p{font-size:1.05rem;line-height:1.75;margin:0}
+.xm-stage{position:relative;height:min(72vh,680px);min-height:380px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--surface-2);box-shadow:var(--shadow)}
+.xm-placeholder{display:grid;place-items:center;height:100%;padding:2rem;text-align:center;color:var(--muted)}
+.xm-placeholder strong{display:block;font:500 1.35rem var(--serif);color:var(--text);margin-bottom:.4rem}
+@media (max-width:700px){.xm-stage{height:65vh;min-height:320px}}
+
+/* ---- Ενιαίος Χάρτης (Leaflet) ---- */
+.xm-map{position:absolute;inset:0;width:100%;height:100%}
+.xm-stage .leaflet-container{font-family:var(--sans,inherit)}
+
+/* πλαίσιο «Επίπεδα» */
+.xm-layers{background:var(--surface,#fff);color:var(--text,#222);border:1px solid var(--line,#ddd);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.18);font-size:.88rem;min-width:190px;max-width:100%}
+.xm-layers-toggle{display:block;width:100%;text-align:left;background:none;border:0;padding:.6rem .8rem;font:600 .9rem var(--sans,inherit);color:inherit;cursor:pointer}
+.xm-layers-body{padding:0 .8rem .6rem;max-height:52vh;overflow:auto}
+.xm-layers.collapsed .xm-layers-body{display:none}
+.xm-group{padding:.4rem 0;border-top:1px solid var(--line,#ddd)}
+.xm-group label{display:flex;align-items:center;gap:.45rem;padding:.2rem 0;cursor:pointer}
+.xm-sw{display:inline-block;width:.8rem;height:.8rem;border-radius:50%}
+
+/* ετικέτες */
+.xm-label{font:600 .74rem var(--sans,inherit);background:rgba(255,255,255,.92);color:#222;border:1px solid rgba(0,0,0,.15);border-radius:4px;padding:1px 5px;box-shadow:none}
+.xm-label.xm-km{display:none;font-size:.68rem;padding:0 3px}
+.xm-km-on .xm-label.xm-km{display:block}
+
+/* popup */
+.xm-popup .leaflet-popup-content-wrapper{background:var(--surface,#fff);color:var(--text,#222);border-radius:10px}
+.xm-popup .leaflet-popup-tip{background:var(--surface,#fff)}
+.xm-pop h3{margin:0 0 .5rem;font:600 1.1rem var(--serif,inherit)}
+.xm-pop p{margin:.4rem 0;line-height:1.55;font-size:.92rem}
+.xm-facts{display:grid;grid-template-columns:auto 1fr;gap:.15rem .7rem;margin:.3rem 0 .6rem;font-size:.88rem}
+.xm-facts dt{font-weight:600;color:var(--muted,#666)}
+.xm-facts dd{margin:0}
+.xm-photo{display:block;width:100%;height:auto;border-radius:6px;margin:.5rem 0}
+
+
+/* ---- Μηκοτομή ---- */
+.xp-wrap{position:absolute;inset:0;overflow:hidden;outline:none;background:var(--surface);user-select:none;-webkit-user-select:none}
+.xp-wrap:focus-visible{box-shadow:inset 0 0 0 3px var(--gold)}
+.xp-svg{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.xp-grab .xp-svg{cursor:grabbing}
+
+.xp-grid{stroke:var(--line);stroke-width:1}
+.xp-grid-v{stroke-dasharray:2 4}
+.xp-axis{stroke:var(--muted);stroke-width:1.2}
+.xp-tick{fill:var(--muted);font:500 11px var(--sans)}
+.xp-axis-title{fill:var(--muted);font:600 11px var(--sans);letter-spacing:.04em}
+.xp-area{fill:var(--accent);opacity:.17}
+.xp-line{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linejoin:round}
+.xp-pt{fill:var(--surface);stroke:var(--accent);stroke-width:1.2}
+.xp-span{fill:none;stroke-linecap:butt;opacity:.9}
+.xp-stem{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 4;opacity:.7}
+.xp-mark{stroke:var(--surface);stroke-width:2;cursor:pointer}
+.xp-ring{fill:none;stroke:var(--gold);stroke-width:2.5}
+.xp-svg [data-id]{cursor:pointer}
+.xp-label{fill:var(--text);font:500 10.5px var(--sans);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.xp-label-st{font:700 11.5px var(--sans)}
+.xp-up{fill:#e8590c;opacity:.85}
+.xp-down{fill:#1c7ed6;opacity:.85}
+.xp-crossline{stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3;pointer-events:none}
+.xp-crossdot{fill:var(--gold);stroke:var(--surface);stroke-width:2;pointer-events:none}
+
+/* κουμπιά ζουμ */
+.xp-tools{position:absolute;top:10px;left:62px;display:flex;align-items:center;gap:6px;z-index:3}
+.xp-tools button{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);font:600 17px/1 var(--sans);cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.15)}
+.xp-tools button:hover{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.xp-tools button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.xp-hint{margin-left:6px;font:500 .75rem var(--sans);color:var(--muted);background:color-mix(in srgb,var(--surface) 85%,transparent);padding:2px 8px;border-radius:6px}
+@media (max-width:700px){.xp-hint{display:none}}
+
+/* πλαίσιο Επίπεδα */
+.xp-layers{position:absolute;top:10px;right:12px;z-index:3;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.18);font-size:.88rem;min-width:190px;max-width:260px}
+.xp-layers-toggle{display:block;width:100%;text-align:left;background:none;border:0;padding:.6rem .8rem;font:600 .9rem var(--sans);color:inherit;cursor:pointer}
+.xp-layers-body{padding:0 .8rem .6rem;border-top:1px solid var(--line);padding-top:.4rem}
+.xp-layers.collapsed .xp-layers-body{display:none}
+.xp-layers label{display:flex;align-items:center;gap:.45rem;padding:.2rem 0;cursor:pointer}
+.xp-sw{display:inline-block;width:.8rem;height:.8rem;border-radius:50%}
+
+/* ένδειξη τιμών */
+.xp-tip{position:absolute;z-index:4;pointer-events:none;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:.45rem .65rem;font:500 .8rem/1.45 var(--sans);box-shadow:0 4px 16px rgba(0,0,0,.2);max-width:260px}
+.xp-tip hr{border:0;border-top:1px solid var(--line);margin:.35rem 0}
+.xp-tip[hidden],.xp-info[hidden]{display:none}
+
+/* κάρτα πληροφοριών */
+.xp-info{position:absolute;z-index:5;left:12px;bottom:12px;width:min(400px,calc(100% - 24px)); max-height:80%; overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem 1rem;box-shadow:0 8px 30px rgba(0,0,0,.28)}
+.xp-close{position:sticky;float:right;top:0;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--text);font:400 20px/1 var(--sans);cursor:pointer}
+.xp-type{font:700 .7rem var(--sans);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.2rem}
+.xp-info .xm-pop h3{margin:0 0 .5rem;font:600 1.15rem var(--serif)}
+.xp-info .xm-pop p{margin:.4rem 0;line-height:1.55;font-size:.92rem}
+.xp-info .xm-facts{display:grid;grid-template-columns:auto 1fr;gap:.15rem .7rem;margin:.3rem 0 .6rem;font-size:.88rem}
+.xp-info .xm-facts dt{font-weight:600;color:var(--muted)}
+.xp-info .xm-facts dd{margin:0}
+.xp-info .xm-photo{display:block;width:100%;height:auto;border-radius:6px;margin:.5rem 0}
+@media (max-width:700px){.xp-info{max-height:50%}.xp-layers{min-width:150px}}
