@@ -16,120 +16,15 @@
 </head>
 <body>
   <header class="navbar" id="siteHeader"></header>
+  <main id="app"></main>
+  <footer id="siteFooter"></footer>
 
-  <main class="page-main">
-    <section class="sectionh" id="introduction">
-      <div class="page-headh">
-        <div class="containerh">
-          <div class="eyebrowh" data-i18n="navMaps"></div>
-          <h1 id="mapsTitle"></h1>
-          <ul class="pillsh" id="mapsPills"></ul>
-        </div>
-      </div>
-    </section>
-    <section class="section" id="maps-section" style="background-color: var(--surface-2)">
-      <div class="containerh"><div id="maps-content"></div></div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container footer-inner">
-      <span>© <span id="year"></span> Bralos Rail Pass</span>
-      <div class="social">
-        <a href="https://www.facebook.com/ΒΑΛΕ_ΕΔΩ_ΤΗΝ_ΣΕΛΙΔΑ" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.5l.5-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.5V4.4c-.3 0-1.2-.1-2.2-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.5v3h2.5V21h3.5z"/></svg>
-        </a>
-        <a href="https://www.instagram.com/ΒΑΛΕ_ΕΔΩ_ΤΟ_ΠΡΟΦΙΛ" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
-        </a>
-        <a href="https://www.youtube.com/ΒΑΛΕ_ΕΔΩ_ΤΟ_ΚΑΝΑΛΙ" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.200 5 12 5 12 5s-6.200 0-7.800.4A2.500 2.500 0 0 0 2.400 7.200C2 8.800 2 12 2 12s0 3.200.4 4.800a2.500 2.500 0 0 0 1.800 1.800C5.800 19 12 19 12 19s6.200 0 7.800-.4a2.500 2.500 0 0 0 1.800-1.800C22 15.200 22 12 22 12s0-3.200-.4-4.800zM10 15V9l5.200 3L10 15z"/></svg>
-        </a>
-        <a href="https://www.tiktok.com/@ΒΑΛΕ_ΕΔΩ_ΤΟ_ΠΡΟΦΙΛ" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.600 3c.3 2.300 1.600 3.700 3.900 3.900v2.800c-1.300.1-2.500-.3-3.800-1.100v5.500c0 3.500-2.500 5.900-5.600 5.900A5.600 5.600 0 0 1 5.500 14.400c0-3.300 2.800-5.800 6.300-5.400v2.900c-1.700-.5-3.300.4-3.300 2.100 0 1.300 1 2.300 2.300 2.300 1.500 0 2.400-1 2.400-2.600V3h2.900z"/></svg>
-        </a>
-        <a href="mailto:ΒΑΛΕ_ΕΔΩ_ΤΟ_EMAIL" aria-label="Email" title="Email">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.500"/><path d="M3.500 7.500 12 13.500l8.500-6"/></svg>
-        </a>
-     </div>
-     <!--<span data-i18n="footerText">Ιστορία · Μηχανική · Φύση</span>-->
-     <a href="#home" data-i18n="backTop">Επιστροφή στην κορυφή ↑</a>
-   </div>
-  </footer>
-
-  <!-- Τα κείμενα των κουμπιών: xartes-data.js · τα δεδομένα του χάρτη: xartes-geo.js (από το KML με το build_geo.py) -->
+  <!-- Κείμενα κουμπιών: xartes-data.js · δεδομένα χάρτη: xartes-geo.js (από το KML με το build_geo.py) · κάθε χάρτης στο δικό του αρχείο -->
   <script src="site.js"></script>
   <script src="xartes-data.js"></script>
   <script src="xartes-geo.js"></script>
-  <script>window.MAP_RENDERERS = {}; window.MAP_ON_SHOW = {};</script>
   <script src="xartes-enas.js"></script>
   <script src="xartes-mikotomi.js"></script>
-  <script>
-    /* ============================================================
-       ΧΑΡΤΕΣ: ΑΛΛΑΓΗ ΠΕΡΙΕΧΟΜΕΝΟΥ ΜΕ ΤΑ ΚΟΥΜΠΙΑ
-       Κάθε χάρτης είναι ένα αρχείο που ορίζει  MAP_RENDERERS.<κλειδί>(stage)  (τρέχει ΜΙΑ φορά, στο πρώτο άνοιγμα)
-       και προαιρετικά  MAP_ON_SHOW.<κλειδί>(stage)  (τρέχει ΚΑΘΕ φορά που εμφανίζεται).
-       Για νέο χάρτη: 1) μπες στο xartes-data.js  2) φτιάξε xartes-<όνομα>.js  3) πρόσθεσέ το με <script> παραπάνω.
-       ============================================================ */
-    SITE.init({ active: "maps", title: { el: "Χάρτες", en: "Maps" } });
-
-    const MD = typeof mapsData !== "undefined" ? mapsData : null;
-    const KEYS = MD ? Object.keys(MD) : [];
-    const content = document.getElementById("maps-content");
-    const title   = document.getElementById("mapsTitle");
-    const pills   = document.getElementById("mapsPills");
-    const SOON = { el: "Ο χάρτης θα προστεθεί σύντομα.", en: "This map will be added soon." };
-    const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const inited = {};
-    let current = null;
-
-    if (!MD) {
-      content.innerHTML = "<p>Δεν βρέθηκε το αρχείο <strong>xartes-data.js</strong>.</p>";
-    } else {
-      pills.innerHTML = KEYS.map(k => `<li><a href="#/xartes/${k}" data-map="${k}"></a></li>`).join("");
-      content.innerHTML = KEYS.map(k => `
-        <section class="xm-panel" id="mp-${k}" hidden>
-          <div class="xm-intro"><h2></h2><p></p></div>
-          <div class="xm-stage" id="stage-${k}"></div>
-        </section>`).join("");
-      addEventListener("hashchange", () => {
-        if (!/^#\/xartes\//.test(location.hash)) return;
-        show(fromHash(), true);
-        document.getElementById("introduction").scrollIntoView({ behavior: reduce() ? "auto" : "smooth" });
-      });
-      document.addEventListener("bralos-languagechange", texts);
-      show(fromHash(), false);
-    }
-
-    function fromHash() { const m = location.hash.match(/^#\/xartes\/([\w-]+)/); return m && MD[m[1]] ? m[1] : KEYS[0]; }
-
-    function texts() {
-      KEYS.forEach(k => {
-        const p = document.getElementById("mp-" + k);
-        p.querySelector("h2").textContent = SITE.pick(MD[k].title);
-        p.querySelector("p").innerHTML = SITE.pick(MD[k].desc);
-        if (inited[k] && !MAP_RENDERERS[k]) placeholder(k);
-      });
-      pills.querySelectorAll("a").forEach(a => { a.classList.toggle("on", a.dataset.map === current); a.textContent = SITE.pick(MD[a.dataset.map].title); });
-      if (current) title.textContent = SITE.pick(MD[current].title);
-    }
-
-    function placeholder(k) {
-      document.getElementById("stage-" + k).innerHTML = `<div class="xm-placeholder"><div><strong>${SITE.esc(SITE.pick(MD[k].title))}</strong>${SITE.pick(SOON)}</div></div>`;
-    }
-
-    function show(key, animate) {
-      current = key;
-      KEYS.forEach(k => { const p = document.getElementById("mp-" + k); p.hidden = k !== key; p.classList.remove("fade-in"); });
-      const panel = document.getElementById("mp-" + key), stage = document.getElementById("stage-" + key);
-      if (!inited[key]) {
-        inited[key] = true;
-        if (MAP_RENDERERS[key]) MAP_RENDERERS[key](stage, MD[key]); else placeholder(key);
-      }
-      if (MAP_ON_SHOW[key]) MAP_ON_SHOW[key](stage);
-      texts();
-      if (animate && !reduce()) { void panel.offsetWidth; panel.classList.add("fade-in"); }
-    }
-  </script>
+  <script src="xartes.js"></script>
 </body>
 </html>

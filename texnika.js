@@ -9,11 +9,10 @@
   const GEO = typeof bralosGeo !== "undefined" ? bralosGeo : null;
   const NAMES_EN = typeof texnikaNamesEn !== "undefined" ? texnikaNamesEn : {};
   const $ = id => document.getElementById(id);
-  const content = $("tk-content"), title = $("tkTitle"), pills = $("tkPills");
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const esc = s => SITE.esc(s);
 
-  SITE.init({ active: "tech", title: { el: "Τεχνικά", en: "Engineering" } });
+  const content = SITE.page({ active: "tech", eyebrow: "navEngineering", title: { el: "Τεχνικά", en: "Engineering" } });
 
   const UI = {
     el: { search: "Αναζήτηση…", only: "Μόνο με περιγραφή", count: n => n + " έργα", none: "Δεν βρέθηκε κανένα έργο.",
@@ -116,13 +115,7 @@
   }
 
   /* ---------- Σελίδες ---------- */
-  let catKey = null, filterText = "", onlyDesc = false;
-
-  function fromHash() {
-    const m = location.hash.match(/^#\/texnika\/([\w-]+)(?:\/([\w-]+))?/);
-    const c = m && TD[m[1]] ? m[1] : Object.keys(TD)[0];
-    return { cat: c, id: m && m[1] === c ? m[2] : null };
-  }
+  let filterText = "", onlyDesc = false;
 
   function listView(ck) {
     const cat = TD[ck], items = CATS[ck];
@@ -187,16 +180,13 @@
     return h;
   }
 
-  function render(animate) {
-    const { cat, id } = fromHash();
-    catKey = cat;
-    pills.querySelectorAll("a").forEach(a => { a.classList.toggle("on", a.dataset.cat === cat); a.textContent = SITE.pick(TD[a.dataset.cat].title); });
-    title.textContent = SITE.pick(TD[cat].title);
-    const it = id && CATS[cat].find(x => x.id === id || x.auto === id);
+  function render(r, animate) {
+    const cat = r.key;
+    if (r.changed) { filterText = ""; onlyDesc = false; }
+    const it = r.id && CATS[cat].find(x => x.id === r.id || x.auto === r.id);
     for (const k in GAL) delete GAL[k];
     content.innerHTML = it ? detailView(cat, it) : listView(cat);
     if (!it) applyFilter();
-    if (animate && !reduce()) { content.classList.remove("fade-in"); void content.offsetWidth; content.classList.add("fade-in"); }
   }
 
   /* ---------- Εκκίνηση ---------- */
@@ -205,24 +195,12 @@
     return;
   }
   build();
-  pills.innerHTML = Object.keys(TD).map(k => `<li><a href="#/texnika/${k}" data-cat="${k}"></a></li>`).join("");
-  let lastKey = "";
-  addEventListener("hashchange", () => {
-    if (!/^#\/texnika\//.test(location.hash)) return;
-    const h = fromHash(), key = h.cat + "/" + (h.id || "");
-    if (h.cat !== catKey) { filterText = ""; onlyDesc = false; }
-    render(true);
-    const sameCat = lastKey.split("/")[0] === h.cat;
-    lastKey = key;
-    (h.id || !sameCat ? $("introduction") : $("introduction")).scrollIntoView({ behavior: reduce() ? "auto" : "smooth" });
-  });
-  document.addEventListener("bralos-languagechange", () => render(false));
+  SITE.route({ base: "texnika", keys: Object.keys(TD), titleOf: k => TD[k].title, render,
+    reveal: ".tk-lead,.tk-hero,.tk-toolbar,.tk-group,.tk-card,#pageContent>.tk-block,.tk-detail>*,.tk-pager a" });
   content.addEventListener("input", e => { if (e.target.id === "tkSearch") { filterText = e.target.value; applyFilter(); } });
   content.addEventListener("change", e => { if (e.target.id === "tkOnly") { onlyDesc = e.target.checked; applyFilter(); } });
   content.addEventListener("click", e => {
     const o = e.target.closest(".hm-open");
     if (o) LB.open(GAL[o.dataset.gal], +o.dataset.i, o);
   });
-  render(false);
-  lastKey = fromHash().cat + "/" + (fromHash().id || "");
 })();

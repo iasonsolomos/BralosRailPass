@@ -30,3 +30,7 @@ const mapsData = {
     }
   }
 };
+
+/* Εδώ δηλώνονται οι «ζωγράφοι» των χαρτών· τα xartes-enas.js και xartes-mikotomi.js γράφουν μέσα τους. */
+window.MAP_RENDERERS = window.MAP_RENDERERS || {};
+window.MAP_ON_SHOW = window.MAP_ON_SHOW || {};

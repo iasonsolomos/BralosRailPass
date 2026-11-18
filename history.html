@@ -62,6 +62,7 @@
             <div class="dd">
                 <a href="xartes.html#/xartes/enas" data-i18n="navMap" data-el="Ένας Ενιαίος Χάρτης">Ενιαίος Χάρτης</a>
                 <a href="xartes.html#/xartes/mellon" data-i18n="navProfile" data-el="Μελλοντικές Προσθήκες">Μελλοντικές Προσθήκες</a>
+                <a href="xartes.html#/xartes/endiaferontos" data-i18n="navInterest" data-el="Μελλοντικές Προσθήκες">Σημεία Ενδιαφέροντος</a>
             </div>
         </div>
         <div>
@@ -126,6 +127,10 @@
         border-color:var(--accent);
         color:var(--accent-ink)}
 
+
+      /* ---- Ομαλή φόρτωση (όπως στην index.html): κεφαλίδα με fade, υπόλοιπα στο scroll ---- */
+      .page-in{animation:pageIn 1s ease both}
+      @keyframes pageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
       /* ---- Περιεχόμενο ιστορικής περιόδου ---- */
       .history-content{padding:3rem 0 1rem;}
@@ -222,7 +227,8 @@
       }
       @media (prefers-reduced-motion:reduce){
         .history-sec{opacity:1;transform:none;transition:none}
-        .history-content.show,.history-sec.flash h3{animation:none}
+        .history-content.show,.history-sec.flash h3,.page-in{animation:none}
+        .reveal{opacity:1;transform:none;transition:none}
       }
     </style>
   </header>
@@ -231,7 +237,7 @@
 
     <section class="sectionh" id="introduction">
       <div class="page-headh">
-        <div class="containerh">
+        <div class="containerh page-in">
             <div class="eyebrowh" data-i="navHistory" datai18n="introEyebrow" data-el="Ιστορία">Ιστορία</div>             
             <h1 id="historyTitle" data-en="Construction" data-el="Κατασκευή">Κατασκευή</h1>
             <ul class="pillsh" id="historyPills">
@@ -669,6 +675,18 @@
     function setupHistoryObservers() {
       hObservers.forEach(o => o.disconnect());
       hObservers = [];
+      // Εισαγωγή, φωτογραφία, χρονολόγιο και «προηγούμενο/επόμενο»: ίδια εμφάνιση με την index (.reveal → .visible)
+      const extra = historyContent.querySelectorAll(".history-hero,.history-lead,.history-note,.history-timeline,.history-pager");
+      extra.forEach(e => e.classList.add("reveal"));
+      if (hReduce()) extra.forEach(e => e.classList.add("visible"));
+      else {
+        const rv = new IntersectionObserver(es => es.forEach(en => {
+          if (en.isIntersecting) { en.target.classList.add("visible"); rv.unobserve(en.target); }
+        }), { threshold: 0.12 });
+        extra.forEach(e => rv.observe(e));
+        hObservers.push(rv);
+      }
+
       const secs = historyContent.querySelectorAll(".history-sec");
       if (!secs.length) return;
 

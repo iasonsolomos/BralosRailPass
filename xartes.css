@@ -3,7 +3,6 @@
    ========================================================================== */
 
 /* ---- Σελίδα ---- */
-#maps-section{padding:2.2rem 0 4rem}
 .xm-panel[hidden]{display:none}
 .xm-intro{max-width:70ch;margin-bottom:1.6rem}
 .xm-intro h2{font-size:clamp(1.6rem,3vw,2.3rem);margin:0 0 .6rem}
@@ -17,14 +16,16 @@
 .xm-map{position:absolute;inset:0;width:100%;height:100%}
 .xm-stage .leaflet-container{font-family:var(--sans,inherit)}
 
-/* πλαίσιο «Επίπεδα» */
-.xm-layers{background:var(--surface,#fff);color:var(--text,#222);border:1px solid var(--line,#ddd);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.18);font-size:.88rem;min-width:190px;max-width:100%}
-.xm-layers-toggle{display:block;width:100%;text-align:left;background:none;border:0;padding:.6rem .8rem;font:600 .9rem var(--sans,inherit);color:inherit;cursor:pointer}
-.xm-layers-body{padding:0 .8rem .6rem;max-height:52vh;overflow:auto}
-.xm-layers.collapsed .xm-layers-body{display:none}
+/* πλαίσιο «Επίπεδα» — κοινό για τον Ενιαίο Χάρτη (xm-) και τη Μηκοτομή (xp-) */
+.xm-layers,.xp-layers{background:var(--surface,#fff);color:var(--text,#222);border:1px solid var(--line,#ddd);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.18);font-size:.88rem;min-width:190px;max-width:100%}
+.xm-layers-toggle,.xp-layers-toggle{display:block;width:100%;text-align:left;background:none;border:0;padding:.6rem .8rem;font:600 .9rem var(--sans,inherit);color:inherit;cursor:pointer}
+.xm-layers-body,.xp-layers-body{padding:0 .8rem .6rem}
+.xm-layers-body{max-height:52vh;overflow:auto}
+.xp-layers-body{border-top:1px solid var(--line);padding-top:.4rem}
+.xm-layers.collapsed .xm-layers-body,.xp-layers.collapsed .xp-layers-body{display:none}
 .xm-group{padding:.4rem 0;border-top:1px solid var(--line,#ddd)}
-.xm-group label{display:flex;align-items:center;gap:.45rem;padding:.2rem 0;cursor:pointer}
-.xm-sw{display:inline-block;width:.8rem;height:.8rem;border-radius:50%}
+.xm-group label,.xp-layers label{display:flex;align-items:center;gap:.45rem;padding:.2rem 0;cursor:pointer}
+.xm-sw,.xp-sw{display:inline-block;width:.8rem;height:.8rem;border-radius:50%}
 
 /* ετικέτες */
 .xm-label{font:600 .74rem var(--sans,inherit);background:rgba(255,255,255,.92);color:#222;border:1px solid rgba(0,0,0,.15);border-radius:4px;padding:1px 5px;box-shadow:none}
@@ -76,13 +77,8 @@
 .xp-hint{margin-left:6px;font:500 .75rem var(--sans);color:var(--muted);background:color-mix(in srgb,var(--surface) 85%,transparent);padding:2px 8px;border-radius:6px}
 @media (max-width:700px){.xp-hint{display:none}}
 
-/* πλαίσιο Επίπεδα */
-.xp-layers{position:absolute;top:10px;right:12px;z-index:3;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.18);font-size:.88rem;min-width:190px;max-width:260px}
-.xp-layers-toggle{display:block;width:100%;text-align:left;background:none;border:0;padding:.6rem .8rem;font:600 .9rem var(--sans);color:inherit;cursor:pointer}
-.xp-layers-body{padding:0 .8rem .6rem;border-top:1px solid var(--line);padding-top:.4rem}
-.xp-layers.collapsed .xp-layers-body{display:none}
-.xp-layers label{display:flex;align-items:center;gap:.45rem;padding:.2rem 0;cursor:pointer}
-.xp-sw{display:inline-block;width:.8rem;height:.8rem;border-radius:50%}
+/* πλαίσιο Επίπεδα (Μηκοτομή): θέση */
+.xp-layers{position:absolute;top:10px;right:12px;z-index:3;max-width:260px}
 
 /* ένδειξη τιμών */
 .xp-tip{position:absolute;z-index:4;pointer-events:none;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:.45rem .65rem;font:500 .8rem/1.45 var(--sans);box-shadow:0 4px 16px rgba(0,0,0,.2);max-width:260px}
@@ -93,12 +89,7 @@
 .xp-info{position:absolute;z-index:5;left:12px;bottom:12px;width:min(400px,calc(100% - 24px)); max-height:80%; overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem 1rem;box-shadow:0 8px 30px rgba(0,0,0,.28)}
 .xp-close{position:sticky;float:right;top:0;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--text);font:400 20px/1 var(--sans);cursor:pointer}
 .xp-type{font:700 .7rem var(--sans);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.2rem}
-.xp-info .xm-pop h3{margin:0 0 .5rem;font:600 1.15rem var(--serif)}
-.xp-info .xm-pop p{margin:.4rem 0;line-height:1.55;font-size:.92rem}
-.xp-info .xm-facts{display:grid;grid-template-columns:auto 1fr;gap:.15rem .7rem;margin:.3rem 0 .6rem;font-size:.88rem}
-.xp-info .xm-facts dt{font-weight:600;color:var(--muted)}
-.xp-info .xm-facts dd{margin:0}
-.xp-info .xm-photo{display:block;width:100%;height:auto;border-radius:6px;margin:.5rem 0}
+.xp-info .xm-pop h3{font-size:1.15rem}
 @media (max-width:700px){.xp-info{max-height:50%}.xp-layers{min-width:150px}}
 
 
