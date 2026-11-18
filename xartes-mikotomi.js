@@ -584,13 +584,48 @@
       const dl = facts.length ? `<dl class="xm-facts">${facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : "";
       const text = (f.text || []).map(p => `<p>${esc(p).replace(/&lt;br&gt;/g, "<br>")}</p>`).join("");
       const photos = (f.photos || []).map(src => `<img class="xm-photo" src="${esc(src)}" alt="${esc(pick(f.name))}" loading="lazy" onerror="this.remove()">`).join("");
-      return `<button type="button" class="xp-close" aria-label="${esc(ui("close"))}">×</button>
+      /* return `<button type="button" class="xp-close" aria-label="${esc(ui("close"))}">×</button> */
+      return `<button type="button" class="xm-modal-close" aria-label="${esc(ui("close"))}">×</button>
         <div class="xm-pop"><div class="xp-type" style="color:${f.color}">${esc(ui(f.sub))}</div><h3>${esc(pick(f.name))}</h3>${dl}${text}${photos}</div>`;
+      
     }
-    function select(id) { selected = id; info.innerHTML = infoHtml(byId[id]); info.hidden = false; info.scrollTop = 0; redraw(); }
-    function closeInfo() { selected = null; info.hidden = true; redraw(); }
-    info.addEventListener("click", e => { if (e.target.closest(".xp-close")) closeInfo(); });
-    ["wheel", "pointerdown", "dblclick"].forEach(ev => info.addEventListener(ev, e => e.stopPropagation()));
+        let modalEl = null, lastFocus = null;
+    function onModalKey(e) { if (e.key === "Escape") closeInfo(); }
+    function modalFill() { modalEl.querySelector(".xm-modal-card").innerHTML = infoHtml(byId[selected]); }
+
+    function select(id) {
+      selected = id;
+      if (!modalEl) {
+        lastFocus = document.activeElement;
+        modalEl = document.createElement("div");
+        modalEl.className = "xm-modal";
+        modalEl.setAttribute("role", "dialog");
+        modalEl.setAttribute("aria-modal", "true");
+        modalEl.innerHTML = '<div class="xm-modal-card"></div>';
+        // κλείνει με πάτημα στο X ή οπουδήποτε έξω από την κάρτα
+        modalEl.addEventListener("click", e => {
+          if (e.target === modalEl || e.target.closest(".xm-modal-close")) closeInfo();
+        });
+        document.body.appendChild(modalEl);
+        document.body.classList.add("xm-modal-open");
+        document.addEventListener("keydown", onModalKey);
+      }
+      modalFill();
+      modalEl.querySelector(".xm-modal-card").scrollTop = 0;
+      modalEl.querySelector(".xm-modal-close").focus();
+      redraw();
+    }
+
+    function closeInfo() {
+      selected = null;
+      if (modalEl) {
+        modalEl.remove(); modalEl = null;
+        document.body.classList.remove("xm-modal-open");
+        document.removeEventListener("keydown", onModalKey);
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+      }
+      redraw();
+    }
 
     /* --- πλαίσιο «Επίπεδα» και κουμπιά (ξαναφτιάχνονται όταν αλλάζει η γλώσσα) --- */
     function renderUi() {
@@ -604,7 +639,7 @@
         <button type="button" class="xp-layers-toggle" aria-expanded="${!collapsed}">${esc(ui("layers"))} <span aria-hidden="true">${collapsed ? "▸" : "▾"}</span></button>
         <div class="xp-layers-body">${LAYERS.map(l => `
           <label><input type="checkbox" data-layer="${l.id}"${state[l.id] ? " checked" : ""}> <i class="xp-sw" style="background:${l.color}"></i> ${esc(pick(l.label))}</label>`).join("")}</div>`;
-      if (selected) info.innerHTML = infoHtml(byId[selected]);
+      if (selected && modalEl) modalFill();
     }
     layersEl.addEventListener("change", e => {
       const id = e.target.dataset && e.target.dataset.layer; if (!id) return;

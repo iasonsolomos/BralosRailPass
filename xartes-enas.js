@@ -11,13 +11,13 @@
 
   // Επίπεδα του χάρτη: on = εμφανίζεται από την αρχή. Η σειρά είναι η σειρά στο πλαίσιο «Επίπεδα».
   const LAYERS = [
-    { id: "route",     on: true,  color: "#e8590c", label: { el: "Διαδρομή",                       en: "Route" } },
-    { id: "stations",  on: true,  color: "#174c3d", label: { el: "Σταθμοί & Στάσεις",              en: "Stations & Halts" } },
-    { id: "bridges",   on: false, color: "#1c7ed6", label: { el: "Γέφυρες",                        en: "Bridges" } },
-    { id: "tunnels",   on: false, color: "#6b4226", label: { el: "Σήραγγες",                       en: "Tunnels" } },
-    { id: "galleries", on: false, color: "#d6336c", label: { el: "Στοές",                          en: "Galleries" } },
-    { id: "kmposts",   on: false, color: "#868e96", label: { el: "Χιλιομετρικές θέσεις",           en: "Kilometre posts" } },
-    { id: "trail",     on: false, color: "#2f9e44", label: { el: "Μονοπάτι",                       en: "Trail" } },
+    { id: "route",     on: true,  color: "#e8590c", label: { el: "Διαδρομή",                        en: "Route" } },
+    { id: "stations",  on: true,  color: "#174c3d", label: { el: "Σταθμοί & Στάσεις",               en: "Stations & Halts" } },
+    { id: "bridges",   on: false, color: "#1c7ed6", label: { el: "Γέφυρες",                         en: "Bridges" } },
+    { id: "tunnels",   on: false, color: "#6b4226", label: { el: "Σήραγγες",                        en: "Tunnels" } },
+    { id: "galleries", on: false, color: "#d6336c", label: { el: "Στοές",                           en: "Galleries" } },
+    { id: "kmposts",   on: false, color: "#868e96", label: { el: "Χιλιομετρικές θέσεις",            en: "Kilometre posts" } },
+    { id: "trail",     on: false, color: "#2f9e44", label: { el: "Μονοπάτι Σιδηροδρομικών",         en: "Trail" } },
     { id: "newline",   on: false, color: "#3b5bdb", label: { el: "Νέα χάραξη & γειτονικές γραμμές", en: "New alignment & neighbouring lines" } },
     { id: "more",      on: false, color: "#9775fa", label: { el: "Φυλάκια, οικήματα, φωτοσήματα",   en: "Guardhouses, houses, signals" } }
   ];
@@ -87,6 +87,22 @@
   /* ---------- Βοηθητικά ---------- */
   const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 
+    const DIR_MODES = [
+      { m: "driving",   el: "Αυτοκίνητο",  en: "Car" },
+      { m: "walking",   el: "Περπάτημα",   en: "Walk" },
+      { m: "bicycling", el: "Ποδήλατο",    en: "Bike" },
+      { m: "transit",   el: "Συγκοινωνία", en: "Transit" }];
+
+  function directionsHtml(f) {
+    if (typeof f.lat !== "number" || typeof f.lng !== "number") return "";
+    const title = lang() === "en" ? "Get directions" : "Οδηγίες διαδρομής";
+    const btns = DIR_MODES.map(d =>
+      `<a class="xm-dir-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${f.lat},${f.lng}&travelmode=${d.m}">${d[lang()]}</a>`
+    ).join("");
+    // return `<div class="xm-dir"><strong>${title}</strong><div class="xm-dir-row">${btns}</div></div>`; // 
+    return `<div class="xm-pop"><h3>${esc(f.name)}</h3>${facts}${text}${photos}${directionsHtml(f)}</div>`;
+  }
+
   function popupHtml(f) {
     const facts = (f.facts && f.facts.length)
       ? `<dl class="xm-facts">${f.facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>` : "";
@@ -95,6 +111,35 @@
       `<img class="xm-photo" src="${esc(src)}" alt="${esc(f.name)}" loading="lazy" onerror="this.remove()">`).join("");
     return `<div class="xm-pop"><h3>${esc(f.name)}</h3>${facts}${text}${photos}</div>`;
   }
+
+  /* ---------- Παράθυρο πληροφοριών (πιάνει όλη την οθόνη, θολώνει το πίσω μέρος) ---------- */
+  let modalEl = null, lastFocus = null;
+  function closeModal() {
+    if (!modalEl) return;
+    modalEl.remove(); modalEl = null;
+    document.body.classList.remove("xm-modal-open");
+    document.removeEventListener("keydown", onModalKey);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function onModalKey(e) { if (e.key === "Escape") closeModal(); }
+  function openModal(f) {
+    closeModal();
+    lastFocus = document.activeElement;
+    modalEl = document.createElement("div");
+    modalEl.className = "xm-modal";
+    modalEl.setAttribute("role", "dialog");
+    modalEl.setAttribute("aria-modal", "true");
+    modalEl.innerHTML = `<div class="xm-modal-card"><button type="button" class="xm-modal-close" aria-label="Close">×</button>${popupHtml(f)}</div>`;
+    // κλείνει με πάτημα στο X ή οπουδήποτε έξω από την κάρτα
+    modalEl.addEventListener("click", e => {
+      if (e.target === modalEl || e.target.closest(".xm-modal-close")) closeModal();
+    });
+    document.body.appendChild(modalEl);
+    document.body.classList.add("xm-modal-open");
+    document.addEventListener("keydown", onModalKey);
+    modalEl.querySelector(".xm-modal-close").focus();
+  }
+
   const POPUP_OPT = { maxWidth: 440, minWidth: 250, maxHeight: 460, className: "xm-popup", autoPanPadding: [24, 80] };
 
   /* ---------- Ο χάρτης ---------- */
@@ -129,7 +174,7 @@
           L.polyline(seg.coords, { color: "#e8590c", weight: 5, opacity: 1, lineJoin: "round", interactive: false }).addTo(g);
           // αόρατη, φαρδιά γραμμή, για να πατιέται εύκολα (και στο κινητό)
           L.polyline(seg.coords, { color: "#000", weight: 20, opacity: 0 })
-            .bindPopup(popupHtml(seg), POPUP_OPT).bindTooltip(seg.name, { sticky: true }).addTo(g);
+            .on("click", e => openModal(Object.assign({}, seg, { lat: e.latlng.lat, lng: e.latlng.lng }))).bindTooltip(seg.name, { sticky: true }).addTo(g);
         });
         return g;
       },
@@ -139,7 +184,7 @@
         geo.stations.forEach(s => {
           const isStation = s.kind === "station";
           circle(s.lat, s.lng, { radius: isStation ? 9 : 7, fillColor: isStation ? "#174c3d" : "#b18b46" })
-            .bindPopup(popupHtml(s), POPUP_OPT)
+            .on("click", () => openModal(s))
             .bindTooltip(esc(s.name), { permanent: true, direction: "right", offset: [9, 0], className: "xm-label" })
             .addTo(g);
         });
@@ -148,19 +193,19 @@
       bridges() {
         const g = L.layerGroup();
         (geo.bridges || []).forEach(f => circle(f.lat, f.lng, { radius: 6, fillColor: "#1c7ed6" })
-          .bindPopup(popupHtml(f), POPUP_OPT).bindTooltip(esc(f.name), { className: "xm-label" }).addTo(g));
+          .on("click", () => openModal(f)).bindTooltip(esc(f.name), { className: "xm-label" }).addTo(g));
         return g;
       },
       tunnels() {
         const g = L.layerGroup();
         (geo.tunnels || []).forEach(f => circle(f.lat, f.lng, { radius: 6, fillColor: "#6b4226" })
-          .bindPopup(popupHtml(f), POPUP_OPT).bindTooltip(esc(f.name), { className: "xm-label" }).addTo(g));
+          .on("click", () => openModal(f)).bindTooltip(esc(f.name), { className: "xm-label" }).addTo(g));
         return g;
       },
       galleries() {
         const g = L.layerGroup();
         (geo.galleries || []).forEach(f => circle(f.lat, f.lng, { radius: 5, fillColor: "#d6336c" })
-          .bindPopup(popupHtml(f), POPUP_OPT).bindTooltip(esc(f.name), { className: "xm-label" }).addTo(g));
+          .on("click", () => openModal(f)).bindTooltip(esc(f.name), { className: "xm-label" }).addTo(g));
         return g;
       },
       kmposts() {
@@ -174,7 +219,7 @@
         L.polyline(geo.trail.coords.map(c => [c[0], c[1]]), { color: "#2f9e44", weight: 4, dashArray: "7 7", opacity: 0.95 })
           .bindTooltip(esc(geo.trail.name), { sticky: true }).addTo(g);
         (geo.trailPoints || []).forEach(f => circle(f.lat, f.lng, { radius: 5, fillColor: "#2f9e44" })
-          .bindPopup(popupHtml(f), POPUP_OPT).bindTooltip(esc(f.name), { className: "xm-label" }).addTo(g));
+          .on("click", () => openModal(f)).bindTooltip(esc(f.name), { className: "xm-label" }).addTo(g));
         return g;
       },
       newline() {

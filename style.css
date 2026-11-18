@@ -456,24 +456,26 @@
 
     .book {
       display: grid;
-      grid-template-columns: 70px 1fr auto;
-      align-items: center;
-      gap: 25px;
-      padding: 25px 0;
+      grid-template-columns: 180px 1fr;
+      align-items: start;
+      gap: 32px;
+      padding: 32px 0;
       border-bottom: 1px solid var(--border);
     }
 
-    .book-icon {
-      height: 70px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
+   .book-cover {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: contain;
+      border-radius: 10px;
       background: var(--surface-2);
-      font-size: 1.7rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,.18);
     }
-
-    .book h3 { font-size: 1.2rem; margin: 0 0 5px; }
-    .book p { margin: 0; font-size: .85rem; }
+    
+    .book h3 { font-size: 1.35rem; margin: 0 0 6px; }
+    .book p { margin: 0 0 12px; font-size: .92rem; line-height: 1.7; }
+    .book .book-author { font-size: .82rem; font-weight: 700; color: var(--muted); }
+    .book .card-link { display: inline-block; margin-top: 4px; }
 
     /* Contact */
 
@@ -514,6 +516,27 @@
     }
 
     .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
+
+    .social { display: flex; align-items: center; gap: 10px; }
+    
+    .social a {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: color .2s, border-color .2s, background .2s, transform .2s;
+    }
+    
+    .social a svg { width: 18px; height: 18px; }
+    
+    .social a:hover {
+      color: var(--green);
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
 
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s, transform .7s; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -590,9 +613,8 @@
       .feature-grid, .cards { grid-template-columns: 1fr; }
       .feature-grid { gap: 28px; }
       .card-image { height: 230px; }
-      .book { grid-template-columns: 52px 1fr; gap: 15px; }
-      .book-icon { height: 52px; }
-      .book .card-link { grid-column: 2; }
+      .book { grid-template-columns: 1fr; gap: 18px; }
+      .book-cover { max-width: 200px; }
       .contact-form { padding: 22px; }
       .footer-inner { flex-direction: column; }
       .stat { padding: 25px 12px; }

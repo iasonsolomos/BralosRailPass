@@ -160,8 +160,9 @@ const texnikaData = {
       media: [ /* εδώ τα τεχνικά σχέδια των τύπων κτιρίων, π.χ. { type: "drawing", src: "img/texnika/ktirio-a-taxis.jpg", caption: { el: `Κτίριο Α’ τάξης` } } */ ]
     }],
     items: [
-      { match: "Στουντνιτς", name: { el: `Στάση Φον Στούντνιτς`, en: `Von Stoudnitz Halt` } }
-      /* π.χ. { match: "Μπράλος", text: { el: [`...`] }, media: [ ... ] } */
+      { match: "Στουντνιτς", name: { el: `Στάση Φον Στούντνιτς`, en: `Von Stoudnitz Halt` },
+      media: [{ type: "pdf",src: "pdf/Von_Studnitz.pdf", caption: { el: `Σχέδιο (PDF)` } }]
+        }
     ]
   }
 };
